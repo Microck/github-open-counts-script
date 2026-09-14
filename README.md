@@ -1,45 +1,37 @@
-# GitHub Repository Card Open Counts
+# github open counts script
 
-Tampermonkey/Violentmonkey userscript that adds open issue and pull request counts to GitHub repository cards, including profile pins and the repositories tab.
+automatically adds open issue and pull request counts to github repository cards so you can see repository activity at a glance.
 
-![GitHub repository cards showing open issue and pull request counts](./screenshot.png)
+![github repository cards showing open issue and pull request counts](./screenshot.png)
 
-## Features
+installation
 
-- Shows open issue and pull request counts beside GitHub's existing repository stats
-- Uses GitHub's native issue and pull request icons
-- Works on profile pins and the repositories tab, including repositories with zero counts
-- Handles cards that GitHub loads after the page opens
-- Caches counts for 10 minutes per tab
-- Supports an optional GitHub token for private repositories and higher API limits
+1. install [violentmonkey](https://violentmonkey.github.io/) or [tampermonkey](https://www.tampermonkey.net/)
+2. [click to install the script](https://github.com/Microck/github-open-counts-script/raw/main/github-repository-card-open-counts.user.js)
+3. refresh your github profile or repositories page
 
-## Installation
+if you see issue and pull request icons with counts beside the repository stats, it is working.
 
-1. Install [Violentmonkey](https://violentmonkey.github.io/) or [Tampermonkey](https://www.tampermonkey.net/).
-2. Open [github-repository-card-open-counts.user.js](https://raw.githubusercontent.com/Microck/github-repository-card-open-counts/main/github-repository-card-open-counts.user.js).
-3. Confirm the installation.
-4. Open a GitHub profile or repositories page and refresh it.
+usage
 
-## Token setup
+1. go to your github profile or the repositories tab
+2. look beside the existing stars and forks
+3. click a count to open that repository's issues or pull requests
 
-For private repositories, open the userscript manager menu and choose **Set GitHub API token**.
+the script also adds a matching stats row to pinned repositories that do not have stars or forks yet. zero counts are shown too.
 
-Paste a token that can read the repositories you want to inspect. The token is stored in the userscript manager and sent only to `api.github.com`.
+token setup
 
-Use **Replace GitHub API token** or **Clear stored GitHub API token** from the same menu when needed.
+public repositories work without a token.
 
-## Usage
+for private repositories, open the userscript manager menu and choose **Set GitHub API token**. paste a token that can read the repositories you want to inspect.
 
-Counts appear beside the existing stars and forks. Pinned repositories without those stats get a matching metadata row.
+the token is stored locally by violentmonkey or tampermonkey and sent only to `api.github.com`.
 
-Click an issue or pull request count to open that repository's corresponding GitHub page.
+customization
 
-## Notes
+use **Replace GitHub API token** or **Clear stored GitHub API token** from the same userscript menu when needed.
 
-- Public repositories work without a token.
-- GitHub counts pull requests as issues, so the script subtracts open pull requests from the combined issue total.
-- If the API request fails, the script leaves GitHub's native links intact.
+license
 
-## License
-
-MIT © Microck
+mit © microck
