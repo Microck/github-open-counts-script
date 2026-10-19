@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub Repository Card Open Counts
 // @namespace    https://github.com/Microck
-// @version      1.4.1
+// @version      1.4.2
 // @description  Add open issue and pull request counts to GitHub repository cards.
 // @match        https://github.com/*
 // @match        https://www.github.com/*
