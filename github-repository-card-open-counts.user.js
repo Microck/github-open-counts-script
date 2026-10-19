@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub Repository Card Open Counts
 // @namespace    https://github.com/Microck
-// @version      1.4.0
+// @version      1.4.1
 // @description  Add open issue and pull request counts to GitHub repository cards.
 // @match        https://github.com/*
 // @match        https://www.github.com/*
@@ -47,6 +47,7 @@
     },
   };
 
+  const countFormatter = new Intl.NumberFormat();
   const cache = new Map();
   const inFlight = new Map();
   const requestQueue = [];
@@ -149,9 +150,13 @@
 
   function coalesceScanRoots(roots) {
     const connectedRoots = [...roots].filter((root) => root === document || root.isConnected);
-    return connectedRoots.filter((root) => (
-      !connectedRoots.some((otherRoot) => otherRoot !== root && otherRoot.contains(root))
-    ));
+    const rootSet = new Set(connectedRoots);
+    return connectedRoots.filter((root) => {
+      for (let ancestor = root.parentNode; ancestor; ancestor = ancestor.parentNode) {
+        if (rootSet.has(ancestor)) return false;
+      }
+      return true;
+    });
   }
 
   function scanCards(roots) {
@@ -392,7 +397,7 @@
   }
 
   function formatCount(count) {
-    return Number(count).toLocaleString();
+    return countFormatter.format(count);
   }
 
   function getCounts(repository) {
@@ -430,8 +435,13 @@
       requestJson(apiBase),
       requestJson(`${apiBase}/pulls?state=open&per_page=1`),
     ]);
+    if (!repositoryResponse.data || !Number.isSafeInteger(repositoryResponse.data.open_issues_count)
+      || repositoryResponse.data.open_issues_count < 0 || !Array.isArray(pullResponse.data)) {
+      throw new Error('GitHub API returned invalid count data');
+    }
     const openPulls = getCollectionTotal(pullResponse);
-    const combinedOpenCount = Math.max(0, Number(repositoryResponse.data.open_issues_count) || 0);
+    if (!Number.isSafeInteger(openPulls) || openPulls < 0) throw new Error('GitHub API returned an invalid pull count');
+    const combinedOpenCount = repositoryResponse.data.open_issues_count;
 
     return {
       // GitHub treats pull requests as issues, so remove them for an issue-only total.
@@ -513,7 +523,13 @@
   function readCache(key) {
     try {
       const raw = sessionStorage.getItem(`${CACHE_PREFIX}${key}`);
-      return raw ? JSON.parse(raw) : null;
+      if (!raw) return null;
+      const record = JSON.parse(raw);
+      if (!record || !Number.isFinite(record.fetchedAt) || record.fetchedAt < 0
+        || record.fetchedAt > Date.now() || !record.counts
+        || !Number.isSafeInteger(record.counts.openIssues) || record.counts.openIssues < 0
+        || !Number.isSafeInteger(record.counts.openPulls) || record.counts.openPulls < 0) return null;
+      return record;
     } catch {
       return null;
     }
