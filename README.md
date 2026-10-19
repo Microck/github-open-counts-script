@@ -35,3 +35,9 @@ use **Replace GitHub API token** or **Clear stored GitHub API token** from the s
 ## license
 
 mit © microck
+
+## verification
+
+With Node 24.8+, run `npm ci`, `npx e2e-web install chromium`, then `npm run test:e2e`. The pinned tester-army/e2e suite runs the actual userscript in Chromium against isolated repository-card fixtures and a local GM request adapter. It checks pinned/dynamic cards, duplicate-request sharing, pagination, invalid cache/API data and native-link restoration. It does not sign into GitHub, store real tokens, or verify a particular userscript manager's private-repository integration.
+
+Count formatting reuses one formatter, and mutation-root coalescing walks ancestors instead of comparing every pair of added roots. Malformed cached counts are ignored and refetched rather than suppressing cards until expiration.

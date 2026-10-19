@@ -1,0 +1,16 @@
+{
+  "name": "github-open-counts-verification",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.8.0"
+  },
+  "scripts": {
+    "test:e2e": "node e2e-runner.mjs",
+    "test": "node --test tests/pure.test.mjs"
+  },
+  "devDependencies": {
+    "e2e": "0.21.2",
+    "@e2e-dev/web": "0.15.2"
+  }
+}
